@@ -67,3 +67,22 @@ export interface Check {
   status: 'Cleared' | 'Pending' | 'Bounced';
   customer: string;
 }
+
+export interface AppSettings {
+  language: string;
+  defaultCurrency: string;
+  companyName: string;
+  registrationNumber: string;
+  vatNumber: string;
+  supportEmail: string;
+  businessAddress: string;
+  autoIncrementStart: string;
+  idPrefix: string;
+  gracePeriod: string;
+  requireSignature: boolean;
+  partialPayments: boolean;
+  evcPlus: string;
+  sahal: string;
+  edahab: string;
+  premierWallet: string;
+}

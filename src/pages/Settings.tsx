@@ -44,17 +44,52 @@ import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import { Switch } from "@/components/ui/switch";
 import { cn } from "@/lib/utils";
+import { useLocalStorage } from "@/hooks/useLocalStorage";
+import type { AppSettings } from "@/types";
+
+const defaultSettings: AppSettings = {
+  language: "en",
+  defaultCurrency: "usd",
+  companyName: "Xarash Trading Co.",
+  registrationNumber: "REG-SOM-482910",
+  vatNumber: "VAT-992-102",
+  supportEmail: "support@xarash.so",
+  businessAddress: "KM4 Street, Hodan District, Mogadishu, Somalia",
+  autoIncrementStart: "1000",
+  idPrefix: "INV-",
+  gracePeriod: "14",
+  requireSignature: true,
+  partialPayments: true,
+  evcPlus: "615550001",
+  sahal: "",
+  edahab: "625550001",
+  premierWallet: "8829100",
+};
 
 export default function Settings() {
+  const [settings, setSettings] = useLocalStorage<AppSettings>("it_settings", defaultSettings);
+  const [localSettings, setLocalSettings] = useState<AppSettings>(settings || defaultSettings);
   const [isSaving, setIsSaving] = useState(false);
   const [activeTab, setActiveTab] = useState("general");
 
   const handleSave = () => {
     setIsSaving(true);
     setTimeout(() => {
+      setSettings(localSettings);
       setIsSaving(false);
       toast.success("Settings saved successfully!");
     }, 1000);
+  };
+
+  const handleFactoryReset = () => {
+    if (window.confirm("Are you sure you want to completely reset the application? All data will be lost. This cannot be undone.")) {
+      localStorage.clear();
+      window.location.reload();
+    }
+  };
+
+  const updateSetting = <K extends keyof AppSettings>(key: K, value: AppSettings[K]) => {
+    setLocalSettings(prev => ({ ...prev, [key]: value }));
   };
 
   const navItems = [
@@ -134,7 +169,7 @@ export default function Settings() {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-2">
                       <Label>Language</Label>
-                      <Select defaultValue="en">
+                      <Select value={localSettings.language} onValueChange={(val) => updateSetting("language", val)}>
                         <SelectTrigger className="rounded-xl border-twilight-border bg-muted/20 h-12">
                           <SelectValue />
                         </SelectTrigger>
@@ -146,7 +181,7 @@ export default function Settings() {
                     </div>
                     <div className="space-y-2">
                       <Label>Default Currency</Label>
-                      <Select defaultValue="usd">
+                      <Select value={localSettings.defaultCurrency} onValueChange={(val) => updateSetting("defaultCurrency", val)}>
                         <SelectTrigger className="rounded-xl border-twilight-border bg-muted/20 h-12">
                           <SelectValue />
                         </SelectTrigger>
@@ -200,25 +235,25 @@ export default function Settings() {
                     <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div className="space-y-2">
                         <Label>Legal Business Name</Label>
-                        <Input defaultValue="Xarash Trading Co." className="rounded-xl border-twilight-border bg-muted/20 h-12" />
+                        <Input value={localSettings.companyName} onChange={(e) => updateSetting("companyName", e.target.value)} className="rounded-xl border-twilight-border bg-muted/20 h-12" />
                       </div>
                       <div className="space-y-2">
                         <Label>Registration Number</Label>
-                        <Input defaultValue="REG-SOM-482910" className="rounded-xl border-twilight-border bg-muted/20 h-12" />
+                        <Input value={localSettings.registrationNumber} onChange={(e) => updateSetting("registrationNumber", e.target.value)} className="rounded-xl border-twilight-border bg-muted/20 h-12" />
                       </div>
                       <div className="space-y-2">
                         <Label>VAT / Tax ID</Label>
-                        <Input defaultValue="VAT-992-102" className="rounded-xl border-twilight-border bg-muted/20 h-12" />
+                        <Input value={localSettings.vatNumber} onChange={(e) => updateSetting("vatNumber", e.target.value)} className="rounded-xl border-twilight-border bg-muted/20 h-12" />
                       </div>
                       <div className="space-y-2">
                         <Label>Support Email</Label>
-                        <Input defaultValue="support@xarash.so" className="rounded-xl border-twilight-border bg-muted/20 h-12" />
+                        <Input value={localSettings.supportEmail} onChange={(e) => updateSetting("supportEmail", e.target.value)} className="rounded-xl border-twilight-border bg-muted/20 h-12" />
                       </div>
                     </div>
                   </div>
                   <div className="space-y-2">
                     <Label>Business Address</Label>
-                    <Textarea defaultValue="KM4 Street, Hodan District, Mogadishu, Somalia" className="rounded-xl border-twilight-border bg-muted/20 min-h-[80px]" />
+                    <Textarea value={localSettings.businessAddress} onChange={(e) => updateSetting("businessAddress", e.target.value)} className="rounded-xl border-twilight-border bg-muted/20 min-h-[80px]" />
                   </div>
                 </CardContent>
               </Card>
@@ -234,15 +269,15 @@ export default function Settings() {
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <div className="space-y-2">
                       <Label>Auto-Increment Start</Label>
-                      <Input type="number" defaultValue="1000" className="rounded-xl h-11" />
+                      <Input type="number" value={localSettings.autoIncrementStart} onChange={(e) => updateSetting("autoIncrementStart", e.target.value)} className="rounded-xl h-11" />
                     </div>
                     <div className="space-y-2">
                       <Label>ID Prefix</Label>
-                      <Input defaultValue="INV-" className="rounded-xl h-11" />
+                      <Input value={localSettings.idPrefix} onChange={(e) => updateSetting("idPrefix", e.target.value)} className="rounded-xl h-11" />
                     </div>
                     <div className="space-y-2">
                       <Label>Grace Period (Days)</Label>
-                      <Input type="number" defaultValue="14" className="rounded-xl h-11" />
+                      <Input type="number" value={localSettings.gracePeriod} onChange={(e) => updateSetting("gracePeriod", e.target.value)} className="rounded-xl h-11" />
                     </div>
                   </div>
                   <Separator className="bg-twilight-border" />
@@ -252,14 +287,14 @@ export default function Settings() {
                         <Label>Electronic Signatures</Label>
                         <p className="text-xs text-muted-foreground">Require customer signature on delivery.</p>
                       </div>
-                      <Switch defaultChecked />
+                      <Switch checked={localSettings.requireSignature} onCheckedChange={(val) => updateSetting("requireSignature", val)} />
                     </div>
                     <div className="flex items-center justify-between">
                       <div className="space-y-0.5">
                         <Label>Partial Payments</Label>
                         <p className="text-xs text-muted-foreground">Allow customers to pay invoices in installments.</p>
                       </div>
-                      <Switch defaultChecked />
+                      <Switch checked={localSettings.partialPayments} onCheckedChange={(val) => updateSetting("partialPayments", val)} />
                     </div>
                   </div>
                 </CardContent>
@@ -273,11 +308,9 @@ export default function Settings() {
                   <div>
                     <CardTitle className="text-lg flex items-center gap-2"><Percent className="h-5 w-5 text-emerald-500" /> Tax Configuration</CardTitle>
                     <CardDescription>Manage global and regional tax settings.</CardDescription>
-
                   </div>
                   <Button variant="outline" size="sm" className="rounded-lg gap-2">
                     <Plus className="h-4 w-4" /> Add Configuration
-
                   </Button>
                 </CardHeader>
                 <CardContent className="space-y-4">
@@ -298,16 +331,12 @@ export default function Settings() {
                       </div>
                       <div className="flex items-center gap-4">
                         <span className="font-black text-lg">{tax.rate}</span>
-
                         <Switch defaultChecked={tax.active} />
                       </div>
                     </div>
                   ))}
                 </CardContent>
               </Card>
-
-              {/* Late fees removed due to religious compliance requirements */}
-
             </TabsContent>
 
             {/* PAYMENTS */}
@@ -320,19 +349,19 @@ export default function Settings() {
                 <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-2">
                     <Label>EVC Plus (Hormuud)</Label>
-                    <Input defaultValue="615550001" className="rounded-xl h-12" />
+                    <Input value={localSettings.evcPlus} onChange={(e) => updateSetting("evcPlus", e.target.value)} className="rounded-xl h-12" />
                   </div>
                   <div className="space-y-2">
                     <Label>Sahal (Golis)</Label>
-                    <Input placeholder="Not set" className="rounded-xl h-12" />
+                    <Input placeholder="Not set" value={localSettings.sahal} onChange={(e) => updateSetting("sahal", e.target.value)} className="rounded-xl h-12" />
                   </div>
                   <div className="space-y-2">
                     <Label>eDahab (Somtel)</Label>
-                    <Input defaultValue="625550001" className="rounded-xl h-12" />
+                    <Input value={localSettings.edahab} onChange={(e) => updateSetting("edahab", e.target.value)} className="rounded-xl h-12" />
                   </div>
                   <div className="space-y-2">
                     <Label>Premier Wallet</Label>
-                    <Input defaultValue="8829100" className="rounded-xl h-12" />
+                    <Input value={localSettings.premierWallet} onChange={(e) => updateSetting("premierWallet", e.target.value)} className="rounded-xl h-12" />
                   </div>
                 </CardContent>
               </Card>
@@ -450,7 +479,7 @@ export default function Settings() {
                     <p className="font-bold text-sm">Reset Workspace</p>
                     <p className="text-xs text-muted-foreground">Permanently delete all data and configurations.</p>
                   </div>
-                  <Button variant="destructive" size="sm" className="rounded-lg px-6">Factory Reset</Button>
+                  <Button variant="destructive" size="sm" onClick={handleFactoryReset} className="rounded-lg px-6">Factory Reset</Button>
                 </CardContent>
               </Card>
             </TabsContent>
