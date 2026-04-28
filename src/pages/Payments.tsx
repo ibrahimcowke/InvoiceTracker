@@ -137,9 +137,9 @@ export default function Payments() {
     // 2. Update Invoice Status
     const totalPaidForInv = payments
       .filter(p => p.invoiceId === inv.id)
-      .reduce((sum, p) => sum + parseFloat(p.amount), 0) + parseFloat(payment.amount);
+      .reduce((sum, p) => sum + (parseFloat(String(p.amount).replace(/[^0-9.-]+/g, "")) || 0), 0) + (parseFloat(String(payment.amount).replace(/[^0-9.-]+/g, "")) || 0);
     
-    if (totalPaidForInv >= parseFloat(inv.amount)) {
+    if (totalPaidForInv >= (parseFloat(String(inv.amount).replace(/[^0-9.-]+/g, "")) || 0)) {
       setInvoices(invoices.map(i => i.id === inv.id ? { ...i, status: "Paid" } : i));
     }
 
@@ -148,8 +148,8 @@ export default function Payments() {
       if (c.name === inv.customer) {
         return {
           ...c,
-          totalSpent: (parseFloat(c.totalSpent || "0") + parseFloat(payment.amount)).toFixed(2),
-          outstanding: Math.max(0, parseFloat(c.outstanding || "0") - parseFloat(payment.amount)).toFixed(2)
+          totalSpent: ((parseFloat(String(c.totalSpent || "0").replace(/[^0-9.-]+/g, "")) || 0) + (parseFloat(String(payment.amount).replace(/[^0-9.-]+/g, "")) || 0)).toFixed(2),
+          outstanding: Math.max(0, (parseFloat(String(c.outstanding || "0").replace(/[^0-9.-]+/g, "")) || 0) - (parseFloat(String(payment.amount).replace(/[^0-9.-]+/g, "")) || 0)).toFixed(2)
         };
       }
       return c;
@@ -248,7 +248,7 @@ export default function Payments() {
           </CardHeader>
           <CardContent>
             <div className="flex items-center justify-between">
-              <div className="text-3xl font-black text-emerald-500">${payments.reduce((acc, p) => acc + parseFloat(p.amount || "0"), 0).toLocaleString()}</div>
+              <div className="text-3xl font-black text-emerald-500">${payments.reduce((acc, p) => acc + (parseFloat(String(p.amount || "0").replace(/[^0-9.-]+/g, "")) || 0), 0).toLocaleString()}</div>
 
               <div className="h-10 w-10 rounded-xl bg-emerald-500/10 flex items-center justify-center">
                 <Banknote className="h-5 w-5 text-emerald-500" />
@@ -263,7 +263,7 @@ export default function Payments() {
           </CardHeader>
           <CardContent>
             <div className="flex items-center justify-between">
-              <div className="text-3xl font-black text-indigo-500">${payments.filter(p => p.method === 'EVC Plus' || p.method === 'Mobile').reduce((acc, p) => acc + parseFloat(p.amount || "0"), 0).toLocaleString()}</div>
+              <div className="text-3xl font-black text-indigo-500">${payments.filter(p => p.method === 'EVC Plus' || p.method === 'Mobile').reduce((acc, p) => acc + (parseFloat(String(p.amount || "0").replace(/[^0-9.-]+/g, "")) || 0), 0).toLocaleString()}</div>
               <div className="h-10 w-10 rounded-xl bg-indigo-500/10 flex items-center justify-center">
                 <Smartphone className="h-5 w-5 text-indigo-500" />
               </div>
@@ -277,7 +277,7 @@ export default function Payments() {
           </CardHeader>
           <CardContent>
             <div className="flex items-center justify-between">
-              <div className="text-3xl font-black text-amber-500">${payments.filter(p => p.status === 'Processing').reduce((acc, p) => acc + parseFloat(p.amount || "0"), 0).toLocaleString()}</div>
+              <div className="text-3xl font-black text-amber-500">${payments.filter(p => p.status === 'Processing').reduce((acc, p) => acc + (parseFloat(String(p.amount || "0").replace(/[^0-9.-]+/g, "")) || 0), 0).toLocaleString()}</div>
               <div className="h-10 w-10 rounded-xl bg-amber-500/10 flex items-center justify-center">
                 <Clock className="h-5 w-5 text-amber-500" />
               </div>
@@ -345,7 +345,7 @@ export default function Payments() {
                   <Badge variant="outline" className="border-twilight-border font-bold text-primary">{payment.invoiceId}</Badge>
                 </TableCell>
                 <TableCell className="font-medium">{payment.customer}</TableCell>
-                <TableCell className="font-black text-emerald-500">${parseFloat(payment.amount).toLocaleString()}</TableCell>
+                <TableCell className="font-black text-emerald-500">${(parseFloat(String(payment.amount).replace(/[^0-9.-]+/g, "")) || 0).toLocaleString()}</TableCell>
                 <TableCell>
                   <div className="flex items-center gap-2 text-sm">
                     {payment.method === "EVC Plus" ? <Smartphone className="h-3 w-3" /> : <Banknote className="h-3 w-3" />}

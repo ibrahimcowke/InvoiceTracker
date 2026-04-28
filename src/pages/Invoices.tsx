@@ -174,7 +174,7 @@ export default function Invoices() {
       if (c.name === invoice.customer) {
         return {
           ...c,
-          outstanding: (parseFloat(c.outstanding || "0") + parseFloat(invoice.amount)).toFixed(2),
+          outstanding: ((parseFloat(String(c.outstanding || "0").replace(/[^0-9.-]+/g, "")) || 0) + (parseFloat(String(invoice.amount).replace(/[^0-9.-]+/g, "")) || 0)).toFixed(2),
           lastInvoice: invoice.dueDate
         };
       }
@@ -365,18 +365,18 @@ export default function Invoices() {
                   </div>
                 </TableCell>
                 <TableCell className="font-medium">{invoice.customer}</TableCell>
-                <TableCell>${parseFloat(invoice.amount).toLocaleString()}</TableCell>
+                <TableCell>${(parseFloat(String(invoice.amount).replace(/[^0-9.-]+/g, "")) || 0).toLocaleString()}</TableCell>
                 <TableCell>{getStatusBadge(invoice.status)}</TableCell>
                 <TableCell>
                   <div className="w-full max-w-[100px] space-y-1.5">
                     <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-tighter">
                       <span className="text-muted-foreground">Paid</span>
-                      <span className="text-primary">{Math.min(100, Math.round((payments.filter(p => p.invoiceId === invoice.id).reduce((sum, p) => sum + parseFloat(p.amount || "0"), 0) / parseFloat(invoice.amount || "1")) * 100))}%</span>
+                      <span className="text-primary">{Math.min(100, Math.round((payments.filter(p => p.invoiceId === invoice.id).reduce((sum, p) => sum + (parseFloat(String(p.amount || "0").replace(/[^0-9.-]+/g, "")) || 0), 0) / (parseFloat(String(invoice.amount || "1").replace(/[^0-9.-]+/g, "")) || 0)) * 100))}%</span>
                     </div>
                     <div className="h-1.5 w-full bg-primary/10 rounded-full overflow-hidden">
                       <div 
                         className="h-full bg-primary transition-all duration-1000" 
-                        style={{ width: `${Math.min(100, Math.round((payments.filter(p => p.invoiceId === invoice.id).reduce((sum, p) => sum + parseFloat(p.amount || "0"), 0) / parseFloat(invoice.amount || "1")) * 100))}%` }} 
+                        style={{ width: `${Math.min(100, Math.round((payments.filter(p => p.invoiceId === invoice.id).reduce((sum, p) => sum + (parseFloat(String(p.amount || "0").replace(/[^0-9.-]+/g, "")) || 0), 0) / (parseFloat(String(invoice.amount || "1").replace(/[^0-9.-]+/g, "")) || 0)) * 100))}%` }} 
                       />
                     </div>
                   </div>
@@ -544,7 +544,7 @@ export default function Invoices() {
                   </div>
                   <div className="p-4 rounded-2xl bg-background/50 border border-twilight-border">
                     <p className="text-[10px] uppercase font-black text-muted-foreground mb-1">Total Amount</p>
-                    <p className="font-black text-lg text-primary">${parseFloat(selectedInvoice.amount).toLocaleString()}</p>
+                    <p className="font-black text-lg text-primary">${(parseFloat(String(selectedInvoice.amount).replace(/[^0-9.-]+/g, "")) || 0).toLocaleString()}</p>
                   </div>
                   <div className="p-4 rounded-2xl bg-background/50 border border-twilight-border">
                     <p className="text-[10px] uppercase font-black text-muted-foreground mb-1">Due Date</p>

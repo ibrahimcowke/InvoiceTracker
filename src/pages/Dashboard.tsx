@@ -81,8 +81,8 @@ export default function Dashboard() {
   ];
 
   // Calculate Financials
-  const totalBilled = invoices.reduce((acc, inv) => acc + parseFloat(inv.amount || "0"), 0);
-  const totalCollected = payments.reduce((acc, pay) => acc + parseFloat(pay.amount || "0"), 0);
+  const totalBilled = invoices.reduce((acc, inv) => acc + (parseFloat(String(inv.amount || "0").replace(/[^0-9.-]+/g, "")) || 0), 0);
+  const totalCollected = payments.reduce((acc, pay) => acc + (parseFloat(String(pay.amount || "0").replace(/[^0-9.-]+/g, "")) || 0), 0);
   const outstanding = totalBilled - totalCollected;
 
   const financials = [
@@ -101,7 +101,7 @@ export default function Dashboard() {
   // Generate Client Data
   const dynamicClientData: ClientData[] = Array.from(
     invoices.reduce((acc, inv) => {
-      acc.set(inv.customer, (acc.get(inv.customer) || 0) + parseFloat(inv.amount || "0"));
+      acc.set(inv.customer, (acc.get(inv.customer) || 0) + (parseFloat(String(inv.amount || "0").replace(/[^0-9.-]+/g, "")) || 0));
       return acc;
     }, new Map<string, number>())
   ).map(([name, value]) => ({ name, value })).sort((a, b) => b.value - a.value).slice(0, 4);

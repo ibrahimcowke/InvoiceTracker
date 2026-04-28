@@ -136,16 +136,16 @@ export const InvoicePDF = ({ invoice }: { invoice: Invoice }) => (
           <View key={i} style={styles.row}>
             <View style={styles.col1}><Text>{item.description}</Text></View>
             <View style={styles.col2}><Text>{item.quantity}</Text></View>
-            <View style={styles.col3}><Text>${parseFloat(item.price).toFixed(2)}</Text></View>
-            <View style={styles.col4}><Text>${(item.quantity * parseFloat(item.price)).toFixed(2)}</Text></View>
+            <View style={styles.col3}><Text>${(parseFloat(String(item.price).replace(/[^0-9.-]+/g, "")) || 0).toFixed(2)}</Text></View>
+            <View style={styles.col4}><Text>${(item.quantity * (parseFloat(String(item.price).replace(/[^0-9.-]+/g, "")) || 0)).toFixed(2)}</Text></View>
           </View>
         ))
       ) : (
         <View style={styles.row}>
           <View style={styles.col1}><Text>Services Rendered</Text></View>
           <View style={styles.col2}><Text>1</Text></View>
-          <View style={styles.col3}><Text>${parseFloat(invoice.amount).toFixed(2)}</Text></View>
-          <View style={styles.col4}><Text>${parseFloat(invoice.amount).toFixed(2)}</Text></View>
+          <View style={styles.col3}><Text>${(parseFloat(String(invoice.amount).replace(/[^0-9.-]+/g, "")) || 0).toFixed(2)}</Text></View>
+          <View style={styles.col4}><Text>${(parseFloat(String(invoice.amount).replace(/[^0-9.-]+/g, "")) || 0).toFixed(2)}</Text></View>
         </View>
       )}
 
@@ -153,7 +153,7 @@ export const InvoicePDF = ({ invoice }: { invoice: Invoice }) => (
         <View>
           <View style={styles.totalRow}>
             <Text style={styles.totalLabel}>Subtotal:</Text>
-            <Text>${parseFloat(invoice.amount).toFixed(2)}</Text>
+            <Text>${(parseFloat(String(invoice.amount).replace(/[^0-9.-]+/g, "")) || 0).toFixed(2)}</Text>
           </View>
           <View style={styles.totalRow}>
             <Text style={styles.totalLabel}>Tax (0%):</Text>
@@ -161,7 +161,7 @@ export const InvoicePDF = ({ invoice }: { invoice: Invoice }) => (
           </View>
           <View style={[styles.totalRow, { borderTopWidth: 1, borderTopColor: "#eee", marginTop: 5, paddingTop: 5 }]}>
             <Text style={styles.totalLabel}>Total Amount:</Text>
-            <Text style={styles.totalAmount}>${parseFloat(invoice.amount).toLocaleString()}</Text>
+            <Text style={styles.totalAmount}>${(parseFloat(String(invoice.amount).replace(/[^0-9.-]+/g, "")) || 0).toLocaleString()}</Text>
           </View>
         </View>
       </View>

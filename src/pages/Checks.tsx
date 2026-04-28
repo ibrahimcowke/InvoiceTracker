@@ -123,11 +123,11 @@ export default function Checks() {
             setCustomers(customers.map(cust => {
               const custPayments = newPayments.filter(p => p.customer === cust.name);
               if (custPayments.length > 0) {
-                const totalPaid = custPayments.reduce((sum, p) => sum + parseFloat(p.amount), 0);
+                const totalPaid = custPayments.reduce((sum, p) => sum + (parseFloat(String(p.amount).replace(/[^0-9.-]+/g, "")) || 0), 0);
                 return {
                   ...cust,
-                  totalSpent: (parseFloat(cust.totalSpent || "0") + totalPaid).toFixed(2),
-                  outstanding: Math.max(0, parseFloat(cust.outstanding || "0") - totalPaid).toFixed(2)
+                  totalSpent: ((parseFloat(String(cust.totalSpent || "0").replace(/[^0-9.-]+/g, "")) || 0) + totalPaid).toFixed(2),
+                  outstanding: Math.max(0, (parseFloat(String(cust.outstanding || "0").replace(/[^0-9.-]+/g, "")) || 0) - totalPaid).toFixed(2)
                 };
               }
               return cust;
@@ -409,7 +409,7 @@ export default function Checks() {
                   </div>
                 </TableCell>
                 <TableCell className="font-medium">{check.customer}</TableCell>
-                <TableCell className="font-black text-foreground">${parseFloat(check.amount).toLocaleString()}</TableCell>
+                <TableCell className="font-black text-foreground">${(parseFloat(String(check.amount).replace(/[^0-9.-]+/g, "")) || 0).toLocaleString()}</TableCell>
                 <TableCell className="text-muted-foreground text-xs font-bold uppercase">{check.dueDate}</TableCell>
                 <TableCell>
                   <Badge className={cn(

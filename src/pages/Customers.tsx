@@ -280,8 +280,8 @@ export default function Customers() {
                 </TableCell>
                 <TableCell>
                   <div className="space-y-1">
-                    <p className="text-xs font-bold">Spent: ${parseFloat(cust.totalSpent).toLocaleString()}</p>
-                    <p className="text-xs text-rose-500 font-bold">Owes: ${parseFloat(cust.outstanding).toLocaleString()}</p>
+                    <p className="text-xs font-bold">Spent: ${(parseFloat(String(cust.totalSpent).replace(/[^0-9.-]+/g, "")) || 0).toLocaleString()}</p>
+                    <p className="text-xs text-rose-500 font-bold">Owes: ${(parseFloat(String(cust.outstanding).replace(/[^0-9.-]+/g, "")) || 0).toLocaleString()}</p>
                   </div>
                 </TableCell>
                 <TableCell>
@@ -363,11 +363,11 @@ export default function Customers() {
                   <div className="grid grid-cols-2 gap-6">
                     <div className="p-6 rounded-2xl bg-primary/5 border border-primary/10">
                       <p className="text-[10px] uppercase font-black text-muted-foreground tracking-widest mb-1">Lifetime Value</p>
-                      <p className="text-3xl font-black text-primary">${parseFloat(selectedCustomer.totalSpent).toLocaleString()}</p>
+                      <p className="text-3xl font-black text-primary">${(parseFloat(String(selectedCustomer.totalSpent).replace(/[^0-9.-]+/g, "")) || 0).toLocaleString()}</p>
                     </div>
                     <div className="p-6 rounded-2xl bg-rose-500/5 border border-rose-500/10">
                       <p className="text-[10px] uppercase font-black text-muted-foreground tracking-widest mb-1">Current Balance</p>
-                      <p className="text-3xl font-black text-rose-500">${parseFloat(selectedCustomer.outstanding).toLocaleString()}</p>
+                      <p className="text-3xl font-black text-rose-500">${(parseFloat(String(selectedCustomer.outstanding).replace(/[^0-9.-]+/g, "")) || 0).toLocaleString()}</p>
                     </div>
                   </div>
                 </TabsContent>
