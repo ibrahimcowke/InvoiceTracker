@@ -204,12 +204,14 @@ export default function Invoices() {
   };
 
   const confirmDelete = () => {
+    if (!selectedInvoice) return;
     setInvoices(invoices.filter(inv => inv.id !== selectedInvoice.id));
     toast.success(`Invoice ${selectedInvoice?.id} has been deleted.`);
     setIsDeleteDialogOpen(false);
   };
 
   const saveEdit = () => {
+    if (!selectedInvoice) return;
     setInvoices(invoices.map(inv => inv.id === selectedInvoice.id ? selectedInvoice : inv));
     toast.success(`Invoice ${selectedInvoice?.id} updated successfully.`);
     setIsEditDialogOpen(false);
@@ -460,7 +462,7 @@ export default function Invoices() {
                 <Label>Client Name</Label>
                 <Input 
                   defaultValue={selectedInvoice?.customer} 
-                  onChange={(e) => setSelectedInvoice({...selectedInvoice, customer: e.target.value})}
+                  onChange={(e) => setSelectedInvoice({...selectedInvoice, customer: e.target.value} as Invoice)}
                   className="rounded-xl border-twilight-border bg-muted/20 h-12" 
                 />
               </div>
@@ -475,7 +477,7 @@ export default function Invoices() {
                 <Input 
                   type="number" 
                   defaultValue={selectedInvoice?.amount} 
-                  onChange={(e) => setSelectedInvoice({...selectedInvoice, amount: e.target.value})}
+                  onChange={(e) => setSelectedInvoice({...selectedInvoice, amount: e.target.value} as Invoice)}
                   className="rounded-xl border-twilight-border bg-muted/20 h-12" 
                 />
               </div>
@@ -484,7 +486,7 @@ export default function Invoices() {
                 <Input 
                   type="date" 
                   defaultValue={selectedInvoice?.dueDate} 
-                  onChange={(e) => setSelectedInvoice({...selectedInvoice, dueDate: e.target.value})}
+                  onChange={(e) => setSelectedInvoice({...selectedInvoice, dueDate: e.target.value} as Invoice)}
                   className="rounded-xl border-twilight-border bg-muted/20 h-12" 
                 />
               </div>

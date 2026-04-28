@@ -113,12 +113,14 @@ export default function Delivery() {
   };
 
   const confirmDelete = () => {
+    if (!selectedDelivery) return;
     setDeliveries(deliveries.filter(d => d.id !== selectedDelivery.id));
     toast.success(`Dispatch record ${selectedDelivery?.id} cancelled and archived.`);
     setIsDeleteDialogOpen(false);
   };
 
   const saveEdit = () => {
+    if (!selectedDelivery) return;
     setDeliveries(deliveries.map(d => d.id === selectedDelivery.id ? selectedDelivery : d));
     toast.success(`Logistics update for ${selectedDelivery?.id} saved.`);
     setIsEditDialogOpen(false);

@@ -123,12 +123,14 @@ export default function Customers() {
   };
 
   const confirmDelete = () => {
+    if (!selectedCustomer) return;
     setCustomers(customers.filter(c => c.id !== selectedCustomer.id));
     toast.success(`${selectedCustomer?.name} has been removed from the registry.`);
     setIsDeleteDialogOpen(false);
   };
 
   const saveEdit = () => {
+    if (!selectedCustomer) return;
     setCustomers(customers.map(c => c.id === selectedCustomer.id ? selectedCustomer : c));
     toast.success(`Profile for ${selectedCustomer?.name} updated.`);
     setIsEditDialogOpen(false);
@@ -395,7 +397,7 @@ export default function Customers() {
               <Label className="font-bold">Company/Client Name</Label>
               <Input 
                 defaultValue={selectedCustomer?.name} 
-                onChange={(e) => setSelectedCustomer({...selectedCustomer, name: e.target.value})}
+                onChange={(e) => setSelectedCustomer({...selectedCustomer, name: e.target.value} as Customer)}
                 className="rounded-xl border-twilight-border bg-muted/20 h-12" 
               />
             </div>
@@ -404,7 +406,7 @@ export default function Customers() {
                 <Label className="font-bold">Email Address</Label>
                 <Input 
                   defaultValue={selectedCustomer?.email} 
-                  onChange={(e) => setSelectedCustomer({...selectedCustomer, email: e.target.value})}
+                  onChange={(e) => setSelectedCustomer({...selectedCustomer, email: e.target.value} as Customer)}
                   className="rounded-xl border-twilight-border bg-muted/20 h-12" 
                 />
               </div>
@@ -412,7 +414,7 @@ export default function Customers() {
                 <Label className="font-bold">Phone Number</Label>
                 <Input 
                   defaultValue={selectedCustomer?.phone} 
-                  onChange={(e) => setSelectedCustomer({...selectedCustomer, phone: e.target.value})}
+                  onChange={(e) => setSelectedCustomer({...selectedCustomer, phone: e.target.value} as Customer)}
                   className="rounded-xl border-twilight-border bg-muted/20 h-12" 
                 />
               </div>

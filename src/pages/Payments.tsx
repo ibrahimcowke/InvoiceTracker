@@ -101,12 +101,14 @@ export default function Payments() {
   };
 
   const confirmDelete = () => {
+    if (!selectedPayment) return;
     setPayments(payments.filter(p => p.id !== selectedPayment.id));
     toast.success(`Transaction ${selectedPayment?.id} has been voided.`);
     setIsDeleteDialogOpen(false);
   };
 
   const saveEdit = () => {
+    if (!selectedPayment) return;
     setPayments(payments.map(p => p.id === selectedPayment.id ? selectedPayment : p));
     toast.success(`Transaction ${selectedPayment?.id} records updated.`);
     setIsEditDialogOpen(false);

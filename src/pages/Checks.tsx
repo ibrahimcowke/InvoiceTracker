@@ -160,12 +160,14 @@ export default function Checks() {
   };
 
   const confirmDelete = () => {
+    if (!selectedCheck) return;
     setChecks(checks.filter(c => c.id !== selectedCheck.id));
     toast.success(`Check record #${selectedCheck?.number} deleted.`);
     setIsDeleteDialogOpen(false);
   };
 
   const saveEdit = () => {
+    if (!selectedCheck) return;
     setChecks(checks.map(c => c.id === selectedCheck.id ? selectedCheck : c));
     toast.success(`Check record #${selectedCheck?.number} updated.`);
     setIsEditDialogOpen(false);
